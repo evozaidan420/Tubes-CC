@@ -1,0 +1,106 @@
+<!-- ?php
+session_start();
+include 'db.php';
+
+// Pastikan pengguna telah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM users WHERE id = $user_id";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $username = $row["username"];
+    $email = $row["email"];
+    $bio = $row["bio"];
+} else {
+    echo "Data tidak ditemukan.";
+}
+$conn->close();
+?> -->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pengguna</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .profile-card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+        .edit-btn {
+            transition: all 0.3s ease;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">Sistem Profil</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="edit_profile.php">Edit Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card profile-card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Profil Pengguna</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Username:</div>
+                            <div class="col-sm-8"><?php echo htmlspecialchars($username); ?></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold">Email:</div>
+                            <div class="col-sm-8"><?php echo htmlspecialchars($email); ?></div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-sm-4 fw-bold">Bio:</div>
+                            <div class="col-sm-8"><?php echo nl2br(htmlspecialchars($bio)); ?></div>
+                        </div>
+                        <div class="text-center">
+                            <a href="edit_profile.php" class="btn btn-primary edit-btn px-4">Edit Profil</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
